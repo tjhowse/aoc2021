@@ -90,17 +90,21 @@ func main() {
 		boards = append(boards, newBoard)
 	}
 
+	first := true
 	for _, number := range numbers {
 		losers := []board{}
 		for i := 0; i < len(boards); i++ {
 			boards[i].number(number)
 			if boards[i].checkWin() {
+				if first {
+					println("First winner's score: ", boards[i].sum(), number, ": ", boards[i].sum()*number)
+					first = false
+				}
 				if len(boards) == 1 {
-					println("Last winner's score: ", boards[0].sum(), number, ": ", boards[0].sum()*number)
+					println("Last winner's score: ", boards[i].sum(), number, ": ", boards[i].sum()*number)
 					return
 				}
-			}
-			if !boards[i].checkWin() {
+			} else {
 				losers = append(losers, boards[i])
 			}
 		}
