@@ -74,11 +74,11 @@ func mainPart1() {
 			}
 		}
 		f = append(f, newFish...)
-		print("Day: ", i, " : ")
-		for k := 0; k < len(f); k++ {
-			print(f[k].c, ",")
-		}
-		println()
+		// print("Day: ", i, " : ")
+		// for k := 0; k < len(f); k++ {
+		// 	print(f[k].c, ",")
+		// }
+		// println()
 		// lenSeq = append(lenSeq, len(f)-prevLen)
 		lenSeq = append(lenSeq, len(f))
 		// println("Len: ", len(f), "step:", len(f)-prevLen)
@@ -89,13 +89,16 @@ func mainPart1() {
 	b := 8
 	q := 6
 
-	for i := b + 1; i < len(lenSeq); i += 1 {
-		print((lenSeq[i] - lenSeq[i-1]), " , ", (lenSeq[i-b]-lenSeq[i-b-1])+(lenSeq[i-q]-lenSeq[i-q-1]))
-		println()
-		// if i%8 == 0 || i%6 == 0 {
-		// println(float64(lenSeq[i]) / float64(lenSeq[i-8]))
-		// }
+	// for i := b + 1; i < len(lenSeq); i += 1 {
+	// 	print((lenSeq[i] - lenSeq[i-1]), " , ", (lenSeq[i-b]-lenSeq[i-b-1])+(lenSeq[i-q]-lenSeq[i-q-1]))
+	// 	println()
+	// }
+	for i := len(lenSeq); i < 256; i += 1 {
+		lenSeq = append(lenSeq, lenSeq[i-1]+(lenSeq[i-b-1]-lenSeq[i-b-2])+(lenSeq[i-q-1]-lenSeq[i-q-2]))
+		// print((lenSeq[i] - lenSeq[i-1]), " , ", (lenSeq[i-b]-lenSeq[i-b-1])+(lenSeq[i-q]-lenSeq[i-q-1]))
+		// println()
 	}
+	println(lenSeq[len(lenSeq)-1])
 	// println("-1:", lenSeq[len(lenSeq)-1])
 	// println("-2:", lenSeq[len(lenSeq)-2])
 	// println("-3:", lenSeq[len(lenSeq)-3])
