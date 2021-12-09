@@ -2,6 +2,7 @@ package main
 
 import (
 	"strings"
+	"time"
 
 	tj "github.com/tjhowse/tjgo"
 )
@@ -83,6 +84,7 @@ func decode(s string) int {
 
 func mainPart1() {
 	a := tj.FileToSlice("input")
+	start := time.Now()
 
 	sum := 0
 
@@ -150,5 +152,8 @@ func mainPart1() {
 	}
 	println("Sum:", sum)
 	println("grandTotal:", grandTotal)
+
+	end := time.Now()
+	println("Elapsed: ", end.Sub(start).Microseconds())
 
 }

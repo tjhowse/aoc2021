@@ -3,6 +3,7 @@ package main
 import (
 	"math"
 	"strings"
+	"time"
 
 	tj "github.com/tjhowse/tjgo"
 )
@@ -23,6 +24,7 @@ func calcFuel(i int) int {
 
 func mainPart1() {
 	a := tj.FileToSlice("input")
+	t := time.Now()
 
 	intSlice := []int{}
 	// blah := []int{}
@@ -46,4 +48,8 @@ func mainPart1() {
 		}
 	}
 	println(leastFuel)
+	t2 := time.Now()
+
+	elapsed := t2.Sub(t)
+	println(elapsed.Milliseconds())
 }
