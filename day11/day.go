@@ -56,10 +56,6 @@ func (o *oct) checkFlash() bool {
 	for y := 0; y < MAXY; y++ {
 		for x := 0; x < MAXX; x++ {
 			if o.m[y][x] > 9 {
-				if o.flashed[y][x] {
-					// Cannot flash again.
-					continue
-				}
 				flashHappened = o.flash(x, y)
 			}
 		}
@@ -81,7 +77,6 @@ func (o *oct) reset() {
 func (o *oct) print() {
 	for y := 0; y < MAXY; y++ {
 		for x := 0; x < MAXX; x++ {
-			// print(o.m[y][x])
 			fmt.Printf("%2d", o.m[y][x])
 		}
 		println()
@@ -107,10 +102,8 @@ func mainPart1() {
 	}
 	prevFlashCount := 0
 
-	for i := 0; i < 10000; i++ {
-		// woo.print()
+	for i := 1; i < 10000; i++ {
 		woo.increase()
-		// woo.checkFlash()
 		limit := 0
 		for woo.checkFlash() {
 			if limit > 10 {
@@ -119,10 +112,12 @@ func mainPart1() {
 		}
 		woo.reset()
 		if (woo.flashCount - prevFlashCount) == 100 {
-			println(i + 1)
+			println("First turn all flash: ", i)
 			break
+		}
+		if i == 100 {
+			println("Flashes at turn 100: ", woo.flashCount)
 		}
 		prevFlashCount = woo.flashCount
 	}
-	println(woo.flashCount)
 }
