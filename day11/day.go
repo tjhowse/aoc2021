@@ -104,11 +104,7 @@ func mainPart1() {
 
 	for i := 1; i < 10000; i++ {
 		woo.increase()
-		limit := 0
 		for woo.checkFlash() {
-			if limit > 10 {
-				break
-			}
 		}
 		woo.reset()
 		if (woo.flashCount - prevFlashCount) == 100 {
