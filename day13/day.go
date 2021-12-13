@@ -53,8 +53,8 @@ func (s *sheet) mark(x, y int) {
 }
 func (s *sheet) count() int {
 	c := 0
-	for i := 0; i < s.maxY; i++ {
-		for j := 0; j < s.maxX; j++ {
+	for i := 0; i <= s.maxY; i++ {
+		for j := 0; j <= s.maxX; j++ {
 			if s.s[i][j] {
 				c++
 				// println(j, ",", i)
@@ -71,6 +71,7 @@ func (s *sheet) fold(x, y int) {
 		for i := y + 1; i <= s.maxY; i++ {
 			for j := 0; j <= s.maxX; j++ {
 				s.s[s.maxY-i][j] = s.s[i][j] || s.s[s.maxY-i][j]
+				s.s[i][j] = false
 			}
 		}
 		s.maxY = y - 1
@@ -79,9 +80,28 @@ func (s *sheet) fold(x, y int) {
 		for i := 0; i <= s.maxY; i++ {
 			for j := x + 1; j <= s.maxX; j++ {
 				s.s[i][s.maxX-j] = s.s[i][j] || s.s[i][s.maxX-j]
+				s.s[i][j] = false
 			}
 		}
 		s.maxX = x - 1
+	}
+}
+
+func (s *sheet) fold2(x, y int) {
+	if x != 0 {
+		for j := 0; j <= s.maxY; j++ {
+			for i := 0; i <= s.maxX; i++ {
+				s.s[j][i] = s.s[j][i] || s.s[j][s.maxX-i]
+			}
+		}
+		s.maxX = x - 1
+	} else {
+		for j := 0; j <= s.maxY; j++ {
+			for i := 0; i <= s.maxX; i++ {
+				s.s[j][i] = s.s[j][i] || s.s[s.maxY-j][i]
+			}
+		}
+		s.maxY = y - 1
 	}
 }
 
@@ -132,19 +152,19 @@ func run(filename string) sheet {
 func mainPart1() {
 	s := run("input")
 
+	s.print()
+	s.fold2(0, 7)
+	s.print()
+	s.fold2(5, 0)
+	s.print()
 	println(s.count())
-	s.print()
-	s.fold(0, 7)
-	s.print()
-	s.fold(5, 0)
-	s.print()
 
 	println()
 
 	s = run("input_real")
 	println("maxX: ", s.maxX, "maxY: ", s.maxY)
 
-	s.fold(655, 0)
+	s.fold2(655, 0)
 	println(s.count())
 	if s.count() != 731 {
 		println("Failure!")
