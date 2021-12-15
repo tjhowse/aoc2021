@@ -96,9 +96,9 @@ func (m *subMap) getAdjacent(x, y int) [][3]int {
 }
 
 func walk(m subMap, x, y int, total int, depth int) int {
-	if total > 10 {
-		return total
-	}
+	// if total > 10 {
+	// 	return total
+	// }
 	depth++
 	// m.print()
 	// println("Walking to: ", x, y, "Total:", total, "Depth: ", depth)
