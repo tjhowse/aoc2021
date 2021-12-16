@@ -98,7 +98,8 @@ func (l *line) load(line string) {
 		bytes = append(bytes, byte(i))
 	}
 	bits := asBits(bytes)
-	l.parsePacket(bits, math.MaxInt)
+	result, _ := l.parsePacket(bits, math.MaxInt)
+	println("Result: ", result[0])
 }
 
 func (l *line) parsePacket(bits []bool, packetLimit int) ([]int, int) {
@@ -123,7 +124,6 @@ func (l *line) parsePacket(bits []bool, packetLimit int) ([]int, int) {
 		case 4:
 			// literal value packet
 			value, bitsConsumed := l.parseAsLiteral(bits[currentBit:])
-			println("Literal value: ", value, "bits length:", bitsConsumed)
 			currentBit += bitsConsumed
 			values = append(values, value)
 		default:
@@ -137,36 +137,29 @@ func (l *line) parsePacket(bits []bool, packetLimit int) ([]int, int) {
 			if l.l == 0 {
 				totalLengthInBits = bitsToInt(bits, currentBit, 15)
 				currentBit += 15
-				println("Parsing", totalLengthInBits, "bits of packets")
 				subValues, _ = l.parsePacket(bits[currentBit:currentBit+totalLengthInBits], math.MaxInt)
-				println("Parsed", totalLengthInBits, "bits of packets")
 				currentBit += totalLengthInBits
 			} else {
 				numberOfSubPackets = bitsToInt(bits, currentBit, 11)
 				currentBit += 11
-				println("Parsing", numberOfSubPackets, "packets")
 				subValues, bitCount = l.parsePacket(bits[currentBit:], numberOfSubPackets)
-				println("Parsed", numberOfSubPackets, "packets")
 				currentBit += bitCount
 			}
 			result := 0
 			switch pt {
 			case 0:
 				// sum
-				println("Sum")
 				for _, val := range subValues {
 					result += val
 				}
 			case 1:
 				// product
-				println("product")
 				result = 1
 				for _, val := range subValues {
 					result *= val
 				}
 			case 2:
 				// minimum
-				println("minimum")
 				result = math.MaxInt
 				for _, val := range subValues {
 					if val < result {
@@ -175,7 +168,6 @@ func (l *line) parsePacket(bits []bool, packetLimit int) ([]int, int) {
 				}
 			case 3:
 				// maximum
-				println("maximum")
 				result = math.MinInt
 				for _, val := range subValues {
 					if val > result {
@@ -184,24 +176,20 @@ func (l *line) parsePacket(bits []bool, packetLimit int) ([]int, int) {
 				}
 			case 5:
 				// greater than
-				println("greater")
 				if subValues[0] > subValues[1] {
 					result = 1
 				}
 			case 6:
 				// less than
-				println("less")
 				if subValues[0] < subValues[1] {
 					result = 1
 				}
 			case 7:
 				//equal to
-				println("equal")
 				if subValues[0] == subValues[1] {
 					result = 1
 				}
 			}
-			println("Result: ", result)
 			values = append(values, result)
 		}
 		// println(l.hex)
@@ -210,7 +198,7 @@ func (l *line) parsePacket(bits []bool, packetLimit int) ([]int, int) {
 			break
 		}
 	}
-	println("Total version: ", totalVersion)
+	// println("Total version: ", totalVersion)
 	return values, currentBit
 }
 
